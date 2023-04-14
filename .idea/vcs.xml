@@ -2,8 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fullstackbook" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fullstackbook-front" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fullstackbook-frontend" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fullstackbook" vcs="" />
+    <mapping directory="$PROJECT_DIR$/fullstackbook-front" vcs="" />
+    <mapping directory="$PROJECT_DIR$/fullstackbook-frontend" vcs="" />
   </component>
 </project>
