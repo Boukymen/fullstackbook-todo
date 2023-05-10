@@ -3,7 +3,7 @@ import {DataGrid, GridColDef, GridValueGetterParams} from '@mui/x-data-grid';
 import {useCallback, useEffect, useRef, useState} from "react";
 import {
     Box,
-    Button,
+    Button, Checkbox,
     CircularProgress,
     debounce,
     Divider, FormControl, InputLabel,
@@ -14,15 +14,15 @@ import {
     Typography
 } from "@mui/material";
 import {CancelOutlined, Close, Remove} from "@mui/icons-material";
-import { AllTableDataConfig } from "@/Utils/configuration";
+import {AllTableDataConfig, Order} from "@/Utils/configuration";
 
 
 export default function DataBrowserFetchAll() {
 
     const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState<number>(0);
     const [operator, setOperator] = useState("equals");
-    const [order, setOrder] = useState('ASC');
+    const [order, setOrder] = useState<string>('ASC');
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [tableName, setTableName] = useState<>("Product") // ProductForecast Site, Store, Product
     const [selectedFilters, setSelectedFilters] = useState<>([]) // ProductForecast Site, Store, Product
@@ -45,7 +45,8 @@ export default function DataBrowserFetchAll() {
         //
         // }
         fetchDataBrowser(tableName, order, page, rowsPerPage)
-    }, [tableName, order, page, rowsPerPage])
+
+    }, [tableName, page, rowsPerPage])
     async function fetchDataBrowser(tableName: string = 'Product', order: string = 'ASC', page: number = 1, rowsPerPage: number = 10) {
         try {
             let path = '/browser'
@@ -177,7 +178,27 @@ export default function DataBrowserFetchAll() {
                 margin : 5,
             }}>
                 <h2 style={{paddingLeft: 4, color: "#8540f8"}}>Filters</h2>
-                <div>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                    <FormControl sx={{ width: 100}}>
+                        <InputLabel id="demo-simple-select-label2" style={{fontSize: 15, alignSelf: 'center'}}>Order By</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label2"
+                            id="demo-simple-select2"
+                            value={order || 'ASC'}
+                            label="OrderBy"
+                            sx={{ minWidth: 20, height: "40px",
+                                display: 'flex', alignItems: 'center',
+                                justifyContent: 'center' }}
+                            onChange={(e: any)=> {
+                                setOrder(e.target.value)
+                            }}>
+                            {Order.map(
+                                (order, idx) => (
+                                    <MenuItem key={idx} value={order}>{order}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
                     <Button variant="outlined" onClick={handleOpen}
                             style={{height: "40px", color: "#8540f8", margin: 10}}>Add filter</Button>
                     {selectedFilters.filter(filterItem => filterItem.tableName === tableName).length > 0 &&
@@ -209,8 +230,9 @@ export default function DataBrowserFetchAll() {
                         <h3 style={{paddingLeft: 4, flex: 2, color: "#696868",}} > Name </h3>
                         <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}} > Operator </h3>
                         <h3 style={{paddingLeft: 4, flex: 3.5, color: "#696868",}} > Values </h3>
+                        <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}} > Order By </h3>
                     </div>
-                    <h3 style={{paddingLeft: 4, color: "#696868",}}> Remove Action </h3>
+                    <h3 style={{paddingLeft: 4, color: "#696868",}}> Remove Filter </h3>
                 </div>
             }
 
@@ -297,6 +319,17 @@ export default function DataBrowserFetchAll() {
                                                    setSelectedFilters([...selectedFilters, obj])
                                                }}/>
                                 }
+                            </div>
+                            <div style={{flex: 1}}>
+                                <Checkbox
+                                    checked={filterItem.isOrderable}
+                                    onChange={(e) => {
+                                        let obj = selectedFilters.filter(
+                                            filterItem3 => filterItem3.tableName === tableName
+                                                && filterItem3.name === filterItem.name)[0].isOrderable = e.target?.checked
+                                        setSelectedFilters([...selectedFilters, obj])
+                                    }}
+                                />
                             </div>
                         </div>
                         <div>

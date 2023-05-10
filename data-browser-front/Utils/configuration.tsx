@@ -349,3 +349,7 @@ export const AllTableDataConfig = [
     },
 
 ]
+
+export const Order = [
+    'ASC', 'DESC'
+]
