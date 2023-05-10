@@ -14,351 +14,7 @@ import {
     Typography
 } from "@mui/material";
 import {CancelOutlined, Close, Remove} from "@mui/icons-material";
-
-const AllTableDataConfig = [
-    {
-        id: 1,
-        tableName: "Product",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "Product",
-                description: "id for product table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "productCode",
-                type: "string",
-                label: "product Code",
-                value: "",
-                operator: ["equals"],
-                tableName: "Product",
-                description: "product code for product table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ],
-    },
-    {
-        id: 2,
-        tableName: "ProductForecast",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "ProductForecast",
-                description: "id for product forecast table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "productCode",
-                type: "string",
-                label: "product Code",
-                value: "",
-                operator:["equals"],
-                tableName: "ProductForecast",
-                description: "product code for product forecast table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            },
-            {
-                name: "date",
-                type: "date",
-                label: "Date",
-                value: "",
-                value2: "",
-                operator: ["equals", "greater than", "less than", "between"],
-                tableName: "ProductForecast",
-                description: "date for product order history table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ],
-    },
-    {
-        id: 3,
-        tableName: "ProductOrderHistory",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "ProductOrderHistory",
-                description: "id for product order history table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "productCode",
-                type: "string",
-                label: "product Code",
-                value: "",
-                operator: ["equals"],
-                tableName: "ProductOrderHistory",
-                description: "product code for product order history table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            },
-            {
-                name: "supplierName",
-                type: "string",
-                label: "supplier Name",
-                value: "",
-                operator: ["equals"],
-                tableName: "ProductOrderHistory",
-                description: "supplier name for product order history table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            },
-            {
-                name: "entryDate",
-                type: "date",
-                label: "entry Date",
-                value: "",
-                value2: "",
-                operator: ["equals", "greater than", "less than", "between"],
-                tableName: "ProductOrderHistory",
-                description: "entry Date for product order history table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ],
-
-    },
-    {
-        id: 4,
-        tableName: "Supplier",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "Supplier",
-                description: "id for supplier table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "name",
-                type: "string",
-                label: "name",
-                value: "",
-                operator: ["equals"],
-                tableName: "Supplier",
-                description: "name for supplier table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ],
-    },
-    {
-        id: 5,
-        tableName: "Site",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "Site",
-                description: "id for site table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "name",
-                type: "string",
-                label: "name",
-                value: "",
-                operator: ["equals"],
-                tableName: "Site",
-                description: "name for site table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ],
-
-    },
-    {
-        id: 6,
-        tableName: "Store",
-        filtrableColumns: [
-            {
-                name: "id",
-                type: "number",
-                label: "ID",
-                value: "",
-                operator: ["equals"],
-                tableName: "Store",
-                description: "id for store table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: false,
-            },
-            {
-                name: "storeNumber",
-                type: "string",
-                label: "store Number",
-                value: "",
-                operator: ["equals"],
-                tableName: "Store",
-                description: "store number for store table",
-                options: [],
-                isRequired: false,
-                isDisabled: false,
-                isSelected: false,
-                isMulti: false,
-                isClearable: true,
-                isSearchable: true,
-                isSortable: false,
-                isFilterable: true,
-                isGroupable: false,
-                isOrderable: true,
-            }
-        ]
-
-    },
-
-]
+import { AllTableDataConfig } from "@/Utils/configuration";
 
 
 export default function DataBrowserFetchAll() {
@@ -375,6 +31,7 @@ export default function DataBrowserFetchAll() {
     const [MetaDatas, setMetaDatas] = useState<>([])
     const [mainInput, setMainInput] = useState('')
     const [filterValue, setFilterValue] = useState<any>(null)
+    const [savedConfigurations, setSavedConfigurations] = useState<[]>(AllTableDataConfig)
     const didFetchRef = useRef(false)
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -479,10 +136,16 @@ export default function DataBrowserFetchAll() {
         }
     }
 
+
+
+
     return (
         <div style={{height: '100%', width: '95vw'}}>
+
+                {/*Table Name: {tableName}*/}
+
             <List style={{display: 'flex', flexDirection: 'row', padding: 0, margin: 10}}>
-                {AllTableDataConfig.map(
+                {savedConfigurations.map(
                     (tableDataConfig, idx) => (
                         <ListItem key={idx}>
                             <Button onClick={() => {
@@ -503,6 +166,8 @@ export default function DataBrowserFetchAll() {
             </List>
 
             <Divider/>
+                {/*Filter Actions Header*/}
+
             <div style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -545,7 +210,6 @@ export default function DataBrowserFetchAll() {
                         <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}} > Operator </h3>
                         <h3 style={{paddingLeft: 4, flex: 3.5, color: "#696868",}} > Values </h3>
                     </div>
-
                     <h3 style={{paddingLeft: 4, color: "#696868",}}> Remove Action </h3>
                 </div>
             }
@@ -564,7 +228,7 @@ export default function DataBrowserFetchAll() {
                     }}>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flex: 3, justifyContent: 'space-between'}}>
                             <div style={{flex: 2}}>
-                                <h3 style={{paddingLeft: 4, color: "#111111", margin: 2}}>{filterItem.name.split(/(?=[A-Z])/).join(' ')}</h3>
+                                <h3 style={{paddingLeft: 4, color: "#111111", margin: 2}}>{filterItem.label}</h3>
                                 <p style={{paddingLeft: 4, color: "#696868", margin: 2}}>{filterItem.description}</p>
                             </div>
                             <div  style={{flex: 1}}>
@@ -574,12 +238,24 @@ export default function DataBrowserFetchAll() {
                                         <Select
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
-                                            value={operator}
+                                            value={filterItem.operator.filter(operator => operator.selected === true)[0].value}
                                             label="Operators"
-                                            onChange={(e: any)=> {setOperator(e.target.value as string)}}>
+                                            onChange={(e: any)=> {
+                                                let obj = selectedFilters.filter(
+                                                    filterItem3 => filterItem3.tableName === tableName
+                                                    && filterItem3.name === filterItem.name)[0].operator.map(
+                                                    (operator, idx2) => {
+                                                        if (operator.value === e.target.value) {
+                                                            operator.selected = true
+                                                        }else {
+                                                            operator.selected = false
+                                                        }
+                                                    })
+                                                setSelectedFilters([...selectedFilters, obj])
+                                            }}>
                                             {filterItem.operator.map(
                                                 (operator, idx) => (
-                                                    <MenuItem key={idx} value={operator}>{operator}</MenuItem>
+                                                    <MenuItem key={idx} value={operator.value}>{operator.label}</MenuItem>
                                             ))
                                             }
                                         </Select>
@@ -587,27 +263,40 @@ export default function DataBrowserFetchAll() {
                                 </Box>
                             </div>
                             <div style={{flex: 4}}>
-                                {operator === "between" && filterItem.hasOwnProperty("value2") ?
+                                {filterItem.operator.filter(operator => operator.selected === true)[0].value === "between" && filterItem.hasOwnProperty("value2") ?
                                     <>
-                                        <TextField id="standard-basic" label="Value"
+                                        <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                    variant="outlined" type={filterItem.type}
                                                    style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
                                                    value={filterItem.value}
-                                                   onChange={(e: any)=> {setFilterValue(e.target.value as string)}}/>
-                                        <TextField id="standard-basic"
+                                                   onChange={(e: any)=> {
+                                                       let obj = selectedFilters.filter(
+                                                           filterItem3 => filterItem3.tableName === tableName
+                                                               && filterItem3.name === filterItem.name)[0].value = e.target.value
+                                                         setSelectedFilters([...selectedFilters, obj])
+                                                   }}/>
+                                        <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                    variant="outlined" type={filterItem.type}
                                                    style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
                                                    value={filterItem.value2}
-                                                   onChange={(e: any)=> {setFilterValue(e.target.value2 as string)}}/>
+                                                   onChange={(e: any)=> {
+                                                       let obj = selectedFilters.filter(
+                                                           filterItem3 => filterItem3.tableName === tableName
+                                                               && filterItem3.name === filterItem.name)[0].value2 = e.target.value
+                                                       setSelectedFilters([...selectedFilters, obj])
+                                                   }}/>
                                     </> :
-                                    <TextField id="standard-basic" label="Value"
+                                    <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                variant="outlined" type={filterItem.type}
                                                style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
                                                value={filterItem.value}
-                                               onChange={(e: any)=> {setFilterValue(e.target.value as string)}}/>
+                                               onChange={(e: any)=> {
+                                                   let obj = selectedFilters.filter(
+                                                       filterItem3 => filterItem3.tableName === tableName
+                                                           && filterItem3.name === filterItem.name)[0].value = e.target.value
+                                                   setSelectedFilters([...selectedFilters, obj])
+                                               }}/>
                                 }
-
-
                             </div>
                         </div>
                         <div>
@@ -716,7 +405,7 @@ export default function DataBrowserFetchAll() {
                         Available Filters
                     </Typography>
                     <List style={{display: 'flex', flexDirection: 'column', padding: 0, margin: 5}}>
-                        {AllTableDataConfig.filter((tableDataConfig) => tableDataConfig.tableName === tableName)[0].filtrableColumns.map(
+                        {savedConfigurations.filter((tableDataConfig) => tableDataConfig.tableName === tableName)[0].filtrableColumns.map(
                             (column, idx) => (
                                 <ListItem key={idx}>
                                     <Button onClick={() => {
@@ -744,7 +433,7 @@ export default function DataBrowserFetchAll() {
                             ))}
                     </List>
                     <Button variant="outlined"
-                            onClick={() => setSelectedFilters(selectedFilters.filter(filterItem => filterItem.tableName !== tableName))}
+                            onClick={handleClose}
                             style={{height: "40px", margin: 10, float: "right", }}>
                         OK
                     </Button>
