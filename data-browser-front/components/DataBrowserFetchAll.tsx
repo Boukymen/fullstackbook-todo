@@ -13,25 +13,25 @@ import {
     Modal, Select, TextField,
     Typography
 } from "@mui/material";
-import {CancelOutlined, Close, Remove} from "@mui/icons-material";
+import {CancelOutlined, Close, Remove, Deselect, SelectAll} from "@mui/icons-material";
 import {AllTableDataConfig, Order} from "@/Utils/configuration";
-
+import { useLocalStorage } from "@/Utils/useLocalStorage";
+import { DataTable } from "@/components/data-table";
+import { ColumnDef } from "@tanstack/react-table"
 
 export default function DataBrowserFetchAll() {
 
+    const [savedConfigurations, setSavedConfigurations] = useState<[]>(AllTableDataConfig)
+    const [savedSelectedFilters, setSavedSelectedFilters] = useLocalStorage<[]>("selectedFilters", [])
     const [page, setPage] = useState(1);
     const [count, setCount] = useState<number>(0);
-    const [operator, setOperator] = useState("equals");
     const [order, setOrder] = useState<string>('ASC');
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [tableName, setTableName] = useState<>("Product") // ProductForecast Site, Store, Product
-    const [selectedFilters, setSelectedFilters] = useState<>([]) // ProductForecast Site, Store, Product
+    const [selectedFilters, setSelectedFilters] = useState<[]>( savedSelectedFilters || [])
     const [datas, setDatas] = useState<>([])
     const [columns, setColumns] = useState<GridColDef[]>([])
-    const [MetaDatas, setMetaDatas] = useState<>([])
     const [mainInput, setMainInput] = useState('')
-    const [filterValue, setFilterValue] = useState<any>(null)
-    const [savedConfigurations, setSavedConfigurations] = useState<[]>(AllTableDataConfig)
     const didFetchRef = useRef(false)
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -39,14 +39,10 @@ export default function DataBrowserFetchAll() {
 
     useEffect(() => {
 
-        // if (didFetchRef.current === false) {
-        //     didFetchRef.current = true
-        //     fetchDataBrowser()
-        //
-        // }
+        setSavedSelectedFilters(selectedFilters || [])
         fetchDataBrowser(tableName, order, page, rowsPerPage)
 
-    }, [tableName, page, rowsPerPage])
+    }, [tableName, page, order, rowsPerPage])
     async function fetchDataBrowser(tableName: string = 'Product', order: string = 'ASC', page: number = 1, rowsPerPage: number = 10) {
         try {
             let path = '/browser'
@@ -74,12 +70,13 @@ export default function DataBrowserFetchAll() {
                     type: (key === 'date' || key === 'entryDate') ? 'date' : value === null ? 'string' : typeof value,
                     width: 200,   //columnSize*6, //
                     // editable: true,
-                    valueGetter: (params: GridValueGetterParams) => (key === 'date' || key === 'entryDate') ? new Date(params.row[key]) : params.row[key]
+                    accessorKey: key,
+                    header: key.split(/(?=[A-Z])/).join(' '),
+                    valueGetter: (params: GridValueGetterParams) => (key === 'date' || key === 'entryDate') ? new Date(params.row[key]) : params.row[key],
 
                 }
             }));
-            setPage(json.meta.page)
-            setOrder(json.meta.order)
+            // setPage(json.meta.page)
             setCount(json.meta.itemCount)
             setRowsPerPage(json.meta.take)
 
@@ -295,8 +292,9 @@ export default function DataBrowserFetchAll() {
                                                        let obj = selectedFilters.filter(
                                                            filterItem3 => filterItem3.tableName === tableName
                                                                && filterItem3.name === filterItem.name)[0].value = e.target.value
-                                                         setSelectedFilters([...selectedFilters, obj])
-                                                   }}/>
+                                                         setSelectedFilters([...selectedFilters])
+                                                   }}
+                                        />
                                         <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                    variant="outlined" type={filterItem.type}
                                                    style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
@@ -305,8 +303,9 @@ export default function DataBrowserFetchAll() {
                                                        let obj = selectedFilters.filter(
                                                            filterItem3 => filterItem3.tableName === tableName
                                                                && filterItem3.name === filterItem.name)[0].value2 = e.target.value
-                                                       setSelectedFilters([...selectedFilters, obj])
-                                                   }}/>
+                                                       setSelectedFilters([...selectedFilters])
+                                                   }}
+                                        />
                                     </> :
                                     <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                variant="outlined" type={filterItem.type}
@@ -316,8 +315,9 @@ export default function DataBrowserFetchAll() {
                                                    let obj = selectedFilters.filter(
                                                        filterItem3 => filterItem3.tableName === tableName
                                                            && filterItem3.name === filterItem.name)[0].value = e.target.value
-                                                   setSelectedFilters([...selectedFilters, obj])
-                                               }}/>
+                                                   setSelectedFilters([...selectedFilters])
+                                               }}
+                                    />
                                 }
                             </div>
                             <div style={{flex: 1}}>
@@ -360,9 +360,10 @@ export default function DataBrowserFetchAll() {
                     <div style={{height: 640, width: '100%'}}>
 
                         <DataGrid
-                            rows={datas || []}
-                            columns={columns || []}
+                            rows={datas}
+                            columns={columns}
                             pageSizeOptions={[5, 10, 15, 25, 50]}
+                            pageSize={rowsPerPage}
                             initialState={{
                                 pagination: {
                                     paginationModel: {page: page - 1, pageSize: rowsPerPage},
@@ -403,14 +404,19 @@ export default function DataBrowserFetchAll() {
 
                             }}
                             autoHeight
-                            rowsPerPage={rowsPerPage}
                             loading={datas?.length === 0 && columns?.length === 0}
+                            paginationMode="server"
                             scrollbarSize={0}
                             labelDisplayedRows={labelDisplayedRows}
                         />
                     </div>
 
                 }
+            </div>
+
+
+            <div style={{height: 700, width: '100%', marginTop: 70}}>
+                {/*<DataTable columns={columns} data={datas} />*/}
             </div>
             <Modal
                 open={open}
