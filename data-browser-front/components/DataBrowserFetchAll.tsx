@@ -27,13 +27,12 @@ export default function DataBrowserFetchAll() {
     const [count, setCount] = useState<number>(0);
     const [order, setOrder] = useState<string>('ASC');
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [tableName, setTableName] = useState<>("Product") // ProductForecast Site, Store, Product
+    const [tableName, setTableName] = useState<string>("Product") // ProductForecast Site, Store, Product
     const [selectedFilters, setSelectedFilters] = useState<[]>( savedSelectedFilters || [])
-    const [datas, setDatas] = useState<>([])
+    const [datas, setDatas] = useState<[]>([])
     const [columns, setColumns] = useState<GridColDef[]>([])
     const [mainInput, setMainInput] = useState('')
-    const didFetchRef = useRef(false)
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -119,7 +118,7 @@ export default function DataBrowserFetchAll() {
     const labelDisplayedRows = ({from, to, count}) => {
         return `${from}-${to} of ${count} rows`;
     };
-    function compareFilterObject(obj1, obj2) {
+    function compareFilterObject(obj1: { tableName: any; name: any; }, obj2: { tableName: any; name: any; }) {
         return obj1.tableName=== obj2.tableName && obj1.name === obj2.name;
     }
     function handleMainInputChange(e: any) {
