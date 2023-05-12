@@ -1,47 +1,24 @@
 import {useEffect, useState} from "react";
 
-export function useLocalStorage<T>(key: string, fallbackValue: T) {
-    const [value, setValue] = useState(fallbackValue);
+export const useLocalStorage = (key: string, defaultValue: any) => {
+    const [value, setValue] = useState(defaultValue);
+
+    const changeValue = (value: any) => {
+        setValue(value);
+        localStorage.setItem(key, JSON.stringify(value));
+    }
 
     useEffect(() => {
         const stored = localStorage.getItem(key);
-        setValue(stored ? JSON.parse(stored) : fallbackValue);
-    }, [key]);
 
-    useEffect(() => {
-        localStorage.setItem(key, JSON.stringify(value));
-    }, [key, value]);
+        if (!stored) {
+            setValue(defaultValue);
+            localStorage.setItem(key, JSON.stringify(defaultValue));
+        } else {
+            setValue(JSON.parse(stored));
+        }
+    }, []); // key, defaultValue
 
-    return [value, setValue] as const;
+    return [value, changeValue]
 }
 
-export const useLocalStorage2 = (key, initialValue) => {
-
-    const [state, setState] = useState(() => {
-        // Initialize the state
-        try {
-            const value = window.localStorage.getItem(key)
-            // Check if the local storage already has any values,
-            // otherwise initialize it with the passed initialValue
-            return value ? JSON.parse(value) : initialValue
-        } catch (error) {
-            console.log(error)
-        }
-    })
-
-    const setValue = value => {
-        try {
-            const valueToStore = value instanceof Function ? value(state) : value
-            window.localStorage.setItem(key, JSON.stringify(valueToStore))
-            setState(value)
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
-
-    return [state, setValue]
-
-}

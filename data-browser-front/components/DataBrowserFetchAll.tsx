@@ -5,7 +5,6 @@ import {
     Box,
     Button, Checkbox,
     CircularProgress,
-    debounce,
     Divider, FormControl, InputLabel,
     List,
     ListItem,
@@ -15,9 +14,9 @@ import {
 } from "@mui/material";
 import {CancelOutlined, Close, Remove, Deselect, SelectAll} from "@mui/icons-material";
 import {AllTableDataConfig, Order} from "@/Utils/configuration";
-import { useLocalStorage } from "@/Utils/useLocalStorage";
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table"
+import {useLocalStorage} from "@/Utils/useLocalStorage";
+import {DataTable} from "@/components/data-table";
+import {ColumnDef} from "@tanstack/react-table"
 
 export default function DataBrowserFetchAll() {
 
@@ -28,7 +27,7 @@ export default function DataBrowserFetchAll() {
     const [order, setOrder] = useState<string>('ASC');
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [tableName, setTableName] = useState<string>("Product") // ProductForecast Site, Store, Product
-    const [selectedFilters, setSelectedFilters] = useState<[]>( savedSelectedFilters || [])
+    const [selectedFilters, setSelectedFilters] = useLocalStorage<[]>("selectedFilters", [])
     const [datas, setDatas] = useState<[]>([])
     const [columns, setColumns] = useState<GridColDef[]>([])
     const [mainInput, setMainInput] = useState('')
@@ -37,11 +36,10 @@ export default function DataBrowserFetchAll() {
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-
-        setSavedSelectedFilters(selectedFilters || [])
         fetchDataBrowser(tableName, order, page, rowsPerPage)
-
+        // setSelectedFilters(savedSelectedFilters)
     }, [tableName, page, order, rowsPerPage])
+
     async function fetchDataBrowser(tableName: string = 'Product', order: string = 'ASC', page: number = 1, rowsPerPage: number = 10) {
         try {
             let path = '/browser'
@@ -78,6 +76,8 @@ export default function DataBrowserFetchAll() {
             // setPage(json.meta.page)
             setCount(json.meta.itemCount)
             setRowsPerPage(json.meta.take)
+            // setSavedSelectedFilters(selectedFilters)
+
 
         } catch (e: any) {
             console.log(e.message)
@@ -85,45 +85,19 @@ export default function DataBrowserFetchAll() {
 
     }
 
-    const debouncedUpdateData = useCallback(debounce(updateData, 500), [])
-
-    function handleToDoChange(e: { target: any }, id: number) {
-        const target = e.target
-        const value = target.type === 'checkbox' ? target.checked : target.value
-        const name = target.name
-        const copy = [...datas]
-        const idx = datas.findIndex((data) => data.id === id)
-        const changedToDo = {
-            ...datas[idx],
-            [name]: value
-        }
-        copy[idx] = changedToDo
-        debouncedUpdateData(changedToDo)
-        setDatas(copy)
-    }
-    async function updateData(data: { name: string, completed: boolean, id: number }) {
-        const values = {
-            name: data.name,
-            completed: data.completed
-        }
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + `/datas/${data.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(values),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-    }
 
     const labelDisplayedRows = ({from, to, count}) => {
         return `${from}-${to} of ${count} rows`;
     };
+
     function compareFilterObject(obj1: { tableName: any; name: any; }, obj2: { tableName: any; name: any; }) {
-        return obj1.tableName=== obj2.tableName && obj1.name === obj2.name;
+        return obj1.tableName === obj2.tableName && obj1.name === obj2.name;
     }
+
     function handleMainInputChange(e: any) {
         setMainInput(e.target.value)
     }
+
     function handleKeyDown(e: { key: string }) {
         if (e.key === 'Enter') {
             if (mainInput.length > 0) {
@@ -134,12 +108,10 @@ export default function DataBrowserFetchAll() {
     }
 
 
-
-
     return (
         <div style={{height: '100%', width: '95vw'}}>
 
-                {/*Table Name: {tableName}*/}
+            {/*Table Name: {tableName}*/}
 
             <List style={{display: 'flex', flexDirection: 'row', padding: 0, margin: 10}}>
                 {savedConfigurations.map(
@@ -163,7 +135,7 @@ export default function DataBrowserFetchAll() {
             </List>
 
             <Divider/>
-                {/*Filter Actions Header*/}
+            {/*Filter Actions Header*/}
 
             <div style={{
                 display: 'flex',
@@ -171,21 +143,24 @@ export default function DataBrowserFetchAll() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 width: '95vw',
-                margin : 5,
+                margin: 5,
             }}>
                 <h2 style={{paddingLeft: 4, color: "#8540f8"}}>Filters</h2>
                 <div style={{display: 'flex', alignItems: 'center'}}>
-                    <FormControl sx={{ width: 100}}>
-                        <InputLabel id="demo-simple-select-label2" style={{fontSize: 15, alignSelf: 'center'}}>Order By</InputLabel>
+                    <FormControl sx={{width: 100}}>
+                        <InputLabel id="demo-simple-select-label2" style={{fontSize: 15, alignSelf: 'center'}}>Order
+                            By</InputLabel>
                         <Select
                             labelId="demo-simple-select-label2"
                             id="demo-simple-select2"
                             value={order || 'ASC'}
                             label="OrderBy"
-                            sx={{ minWidth: 20, height: "40px",
+                            sx={{
+                                minWidth: 20, height: "40px",
                                 display: 'flex', alignItems: 'center',
-                                justifyContent: 'center' }}
-                            onChange={(e: any)=> {
+                                justifyContent: 'center'
+                            }}
+                            onChange={(e: any) => {
                                 setOrder(e.target.value)
                             }}>
                             {Order.map(
@@ -223,10 +198,10 @@ export default function DataBrowserFetchAll() {
                         margin: 5,
                         flex: 3
                     }}>
-                        <h3 style={{paddingLeft: 4, flex: 2, color: "#696868",}} > Name </h3>
-                        <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}} > Operator </h3>
-                        <h3 style={{paddingLeft: 4, flex: 3.5, color: "#696868",}} > Values </h3>
-                        <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}} > Order By </h3>
+                        <h3 style={{paddingLeft: 4, flex: 2, color: "#696868",}}> Name </h3>
+                        <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}}> Operator </h3>
+                        <h3 style={{paddingLeft: 4, flex: 3.5, color: "#696868",}}> Values </h3>
+                        <h3 style={{paddingLeft: 4, flex: 1, color: "#696868",}}> Order By </h3>
                     </div>
                     <h3 style={{paddingLeft: 4, color: "#696868",}}> Remove Filter </h3>
                 </div>
@@ -244,13 +219,19 @@ export default function DataBrowserFetchAll() {
                         paddingTop: 5,
                         margin: 5
                     }}>
-                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flex: 3, justifyContent: 'space-between'}}>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'flex-start',
+                            flex: 3,
+                            justifyContent: 'space-between'
+                        }}>
                             <div style={{flex: 2}}>
                                 <h3 style={{paddingLeft: 4, color: "#111111", margin: 2}}>{filterItem.label}</h3>
                                 <p style={{paddingLeft: 4, color: "#696868", margin: 2}}>{filterItem.description}</p>
                             </div>
-                            <div  style={{flex: 1}}>
-                                <Box sx={{ minWidth: 200 }}>
+                            <div style={{flex: 1}}>
+                                <Box sx={{minWidth: 200}}>
                                     <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">Operators</InputLabel>
                                         <Select
@@ -258,14 +239,14 @@ export default function DataBrowserFetchAll() {
                                             id="demo-simple-select"
                                             value={filterItem.operator.filter(operator => operator.selected === true)[0].value}
                                             label="Operators"
-                                            onChange={(e: any)=> {
+                                            onChange={(e: any) => {
                                                 let obj = selectedFilters.filter(
                                                     filterItem3 => filterItem3.tableName === tableName
-                                                    && filterItem3.name === filterItem.name)[0].operator.map(
+                                                        && filterItem3.name === filterItem.name)[0].operator.map(
                                                     (operator, idx2) => {
                                                         if (operator.value === e.target.value) {
                                                             operator.selected = true
-                                                        }else {
+                                                        } else {
                                                             operator.selected = false
                                                         }
                                                     })
@@ -273,8 +254,9 @@ export default function DataBrowserFetchAll() {
                                             }}>
                                             {filterItem.operator.map(
                                                 (operator, idx) => (
-                                                    <MenuItem key={idx} value={operator.value}>{operator.label}</MenuItem>
-                                            ))
+                                                    <MenuItem key={idx}
+                                                              value={operator.value}>{operator.label}</MenuItem>
+                                                ))
                                             }
                                         </Select>
                                     </FormControl>
@@ -285,20 +267,20 @@ export default function DataBrowserFetchAll() {
                                     <>
                                         <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                    variant="outlined" type={filterItem.type}
-                                                   style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
+                                                   style={{paddingLeft: 4, margin: 2, minWidth: 400}}
                                                    value={filterItem.value}
-                                                   onChange={(e: any)=> {
+                                                   onChange={(e: any) => {
                                                        let obj = selectedFilters.filter(
                                                            filterItem3 => filterItem3.tableName === tableName
                                                                && filterItem3.name === filterItem.name)[0].value = e.target.value
-                                                         setSelectedFilters([...selectedFilters])
+                                                       setSelectedFilters([...selectedFilters])
                                                    }}
                                         />
                                         <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                    variant="outlined" type={filterItem.type}
-                                                   style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
+                                                   style={{paddingLeft: 4, margin: 2, minWidth: 400}}
                                                    value={filterItem.value2}
-                                                   onChange={(e: any)=> {
+                                                   onChange={(e: any) => {
                                                        let obj = selectedFilters.filter(
                                                            filterItem3 => filterItem3.tableName === tableName
                                                                && filterItem3.name === filterItem.name)[0].value2 = e.target.value
@@ -308,9 +290,9 @@ export default function DataBrowserFetchAll() {
                                     </> :
                                     <TextField id="standard-basic" label={filterItem.type === 'date' ? '' : "Value"}
                                                variant="outlined" type={filterItem.type}
-                                               style={{paddingLeft: 4, margin: 2, minWidth: 400 }}
+                                               style={{paddingLeft: 4, margin: 2, minWidth: 400}}
                                                value={filterItem.value}
-                                               onChange={(e: any)=> {
+                                               onChange={(e: any) => {
                                                    let obj = selectedFilters.filter(
                                                        filterItem3 => filterItem3.tableName === tableName
                                                            && filterItem3.name === filterItem.name)[0].value = e.target.value
@@ -335,7 +317,8 @@ export default function DataBrowserFetchAll() {
                             <Button variant="outlined" onClick={() => {
                                 setSelectedFilters(selectedFilters.filter((item, index) => index !== idx))
                             }}
-                                    style={{height: "40px", color: "#ff2222", margin: 10}}><Remove fontSize="large"  /></Button>
+                                    style={{height: "40px", color: "#ff2222", margin: 10}}><Remove
+                                fontSize="large"/></Button>
                         </div>
                     </div>
                 ))
@@ -455,7 +438,7 @@ export default function DataBrowserFetchAll() {
                                         if (index !== -1) {
                                             setSelectedFilters(selectedFilters.filter((item, idx) => idx !== index))
                                             // setSelectedFilters(selectedFilters.filter((item) => item !== column));
-                                        }else {
+                                        } else {
                                             setSelectedFilters([...selectedFilters, column])
                                         }
                                     }}
@@ -470,11 +453,22 @@ export default function DataBrowserFetchAll() {
                                 </ListItem>
                             ))}
                     </List>
-                    <Button variant="outlined"
-                            onClick={handleClose}
-                            style={{height: "40px", margin: 10, float: "right", }}>
-                        OK
-                    </Button>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", alignItems: 'center'}}>
+
+                        <Button variant="outlined"
+                                onClick={()=>{setSelectedFilters(savedConfigurations.filter((tableDataConfig) => tableDataConfig.tableName === tableName)[0].filtrableColumns)}}
+                                style={{height: "40px", margin: 10, float: "left",}}>
+                            Select All
+                        </Button>
+
+
+                        <Button variant="outlined"
+                                onClick={handleClose}
+                                style={{height: "40px", margin: 10, float: "right",}}>
+                            OK
+                        </Button>
+
+                    </div>
                 </Box>
             </Modal>
         </div>
