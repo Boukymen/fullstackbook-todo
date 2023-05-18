@@ -36,12 +36,13 @@ export default function DataBrowserFetchAll() {
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        fetchDataBrowser(tableName, order, page, rowsPerPage)
+        fetchDataBrowser(tableName, order, page, rowsPerPage, selectedFilters.filter((filter) => filter.tableName === tableName))
         // setSelectedFilters(savedSelectedFilters)
     }, [tableName, page, order, rowsPerPage])
 
-    async function fetchDataBrowser(tableName: string = 'Product', order: string = 'ASC', page: number = 1, rowsPerPage: number = 10) {
+    async function fetchDataBrowser(tableName: string = 'Product', order: string = 'ASC', page: number = 1, rowsPerPage: number = 10, filters: any = []) {
         try {
+            console.log(filters)
             let path = '/browser'
             if (tableName !== undefined) {
                 path = `/browser/${tableName}?`
@@ -85,11 +86,14 @@ export default function DataBrowserFetchAll() {
 
     }
 
-
     const labelDisplayedRows = ({from, to, count}) => {
         return `${from}-${to} of ${count} rows`;
     };
 
+    const applyFilter = (tableName, filters) => {
+        // setSelectedFilters(Filters)
+        fetchDataBrowser(tableName, order, page, rowsPerPage, filters)
+    }
     function compareFilterObject(obj1: { tableName: any; name: any; }, obj2: { tableName: any; name: any; }) {
         return obj1.tableName === obj2.tableName && obj1.name === obj2.name;
     }
@@ -324,6 +328,16 @@ export default function DataBrowserFetchAll() {
                 ))
             }
 
+            {selectedFilters.filter(filterItem => filterItem.tableName === tableName).length > 0 &&
+
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+                <Button variant="outlined"
+                        onClick={() => applyFilter(tableName, selectedFilters.filter(filterItem => filterItem.tableName === tableName))}
+                        style={{height: "40px", color: "#8540f8", margin: 10}}>
+                  Apply Filter
+                </Button>
+                </div>
+            }
             <Divider/>
 
             <div style={{height: 700, width: '100%'}}>
